@@ -1,3 +1,4 @@
+#Simple 5 card Texas Holdem poker hand evaluator. Sample hands are constructed at the end for testing purposes. 
 class Card:
 
     def __init__(self, rank, suit):
