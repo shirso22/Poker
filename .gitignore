@@ -1,0 +1,3 @@
+build/
+*.o
+poker_history.txt
