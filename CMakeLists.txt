@@ -25,3 +25,19 @@ add_executable(test_range core/tests/test_range.cpp)
 target_link_libraries(test_range PRIVATE poker_core)
 target_compile_options(test_range PRIVATE -Wall -Wextra -O3 -march=native)
 add_test(NAME range COMMAND test_range)
+
+# ---- CUDA (optional) ----
+# Configure with -DPOKER_CUDA=ON on a machine with nvcc. Target: RTX 3060 (sm_86).
+option(POKER_CUDA "Build CUDA kernels and GPU benchmarks" OFF)
+if(POKER_CUDA)
+  enable_language(CUDA)
+  set(CMAKE_CUDA_STANDARD 20)
+  set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+    set(CMAKE_CUDA_ARCHITECTURES 86)
+  endif()
+  add_executable(bench_flop_equity gpu/bench_flop_equity.cu gpu/flop_equity.cu)
+  target_link_libraries(bench_flop_equity PRIVATE poker_core)
+  target_compile_options(bench_flop_equity PRIVATE
+    $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr -lineinfo -O3>)
+endif()
